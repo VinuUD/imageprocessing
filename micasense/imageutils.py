@@ -43,6 +43,9 @@ def normalize(im, min=None, max=None):
     norm[norm>1.0] = 1.0
     return norm
 
+from skimage.morphology import disk
+from skimage.filters import rank
+
 def local_normalize(im):
     norm = img_as_ubyte(normalize(im)) # TODO: mainly using this as a type conversion, but it's expensive
     width, _ = im.shape
@@ -50,7 +53,7 @@ def local_normalize(im):
     if disksize % 2 == 0:
         disksize = disksize + 1
     selem = disk(disksize)
-    norm2 = rank.equalize(norm, selem=selem)
+    norm2 = rank.equalize(norm, footprint=selem)
     return norm2
 
 def gradient(im, ksize=5):
